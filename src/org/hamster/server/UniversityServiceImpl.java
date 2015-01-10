@@ -1,6 +1,5 @@
 package org.hamster.server;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hamster.client.UniversityService;
@@ -8,7 +7,6 @@ import org.hamster.server.dao.StudentDAO;
 import org.hamster.server.db.Utils;
 import org.hamster.server.db.entities.Student;
 import org.hamster.shared.dto.StudentDTO;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -21,18 +19,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class UniversityServiceImpl extends RemoteServiceServlet implements
 		UniversityService {
 	
-	public StudentDTO getStudent(Integer id) /*throws IllegalArgumentException*/ {
-		
-		//SessionFactory sf = Utils.getSessionFactory();
-				//Session session = sf.openSession();
-				//Query q = session.createQuery("from Student");
-				//List<Student> list = q.list();
-				
-				//Query q = session.createQuery("from Teacher");
-				//List<Teacher> list = q.list();
-				
-				//Query q = session.createQuery("from Dissertation");
-				//List<Dissertation> list = q.list();
+	public StudentDTO getStudent(Integer id) {
 		
 		SessionFactory sf = Utils.getSessionFactory();
 		Session session = sf.openSession();

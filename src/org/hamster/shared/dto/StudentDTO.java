@@ -1,5 +1,7 @@
 package org.hamster.shared.dto;
 
+import java.util.List;
+
 public class StudentDTO implements AbstractDTO {
 
 	private Integer id;
@@ -11,6 +13,8 @@ public class StudentDTO implements AbstractDTO {
 	private Integer course;
 	
 	private Integer group;
+	
+	private List<DissertationDTO> dissertation;
 	
 	public StudentDTO()
 	{
@@ -66,6 +70,14 @@ public class StudentDTO implements AbstractDTO {
 		this.group = group;
 	}
 	
+	public List<DissertationDTO> getDissertation() {
+		return dissertation;
+	}
+
+	public void setDissertation(List<DissertationDTO> dissertation) {
+		this.dissertation = dissertation;
+	}
+
 	public String getFullName()
 	{
 		return firstName + " " + lastName;

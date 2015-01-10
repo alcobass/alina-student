@@ -26,8 +26,9 @@ public class University implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		
-		//RootPanel.get().add(GetInfo());
-		RootPanel.get().add(new StudentList());
+		StudentList studentList = new StudentList();
+		RootPanel.get().add(studentList);
+		studentList.loadData();
 	}
 	
 		

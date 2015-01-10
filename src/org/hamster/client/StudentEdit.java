@@ -27,10 +27,13 @@ public class StudentEdit extends Composite {
 	  
 	public StudentEdit(StudentDTO student, Command closeCommand)
 	{
-		this.studentDTO = student;
+		if (student!=null)
+			this.studentDTO = student;
+		else this.studentDTO = new StudentDTO();
 		this.closeCommand = closeCommand;
 		Widget studEdit = createWidget();
-		fillData(student);
+		if (student != null)
+			fillData(student);
 		initWidget(studEdit);
 	}
 	

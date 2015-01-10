@@ -11,115 +11,124 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class StudentList extends Composite {
 	
+	private FlexTable ftMainTable = new FlexTable();
+	
 	public StudentList()
 	{
-		FlexTable ft = getStudList();
-		initWidget(ft);
+		initWidget(ftMainTable);
 	}
 	
-//	private FlexTable GetInfo()
-//	{
-//		final FlexTable ft = new FlexTable();
-//		ft.setText(0, 0, "Student name:");
-//		universityService.getStudent(1, new AsyncCallback<StudentDTO>() {
-//
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//
-//			@Override
-//			public void onSuccess(StudentDTO result) {
-//				ft.setText(0, 1, result.getFirstName() + " " + result.getLastName());
-//				
-//			}
-//			
-//		});
-//		
-//		return ft;
-//
-//	}
 	
-	private FlexTable getStudList()
+	private void setData(List<StudentDTO> data)
 	{
-		final FlexTable ftList = new FlexTable();
+		ftMainTable.clear(true);
+		
+		if (data == null)
+			return;
+		
+		int rowcnt = 0;
+		
+		PushButton addBtn = new PushButton("ADD", new  ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				final PopupPanel editPnl = new PopupPanel(false, true);
+				Command cancelCommand = new Command() {
+					
+					@Override
+					public void execute() {
+						editPnl.hide();
+						loadData();
+					}
+				};
+				editPnl.add(new StudentEdit(null, cancelCommand));
+				editPnl.center();
+				
+			}
+		});
+		ftMainTable.setWidget(0, 0, addBtn);
+		rowcnt++;
+		
+		ftMainTable.setText(rowcnt, 0, "ID");
+		ftMainTable.setText(rowcnt, 1, "FIRST NAME");
+		ftMainTable.setText(rowcnt, 2, "SECOND NAME");
+		ftMainTable.setText(rowcnt, 3, "GOURSE");
+		ftMainTable.setText(rowcnt, 4, "GROUP");
+		ftMainTable.setText(rowcnt, 5, "DISSERTATION");
+		ftMainTable.setText(rowcnt, 6, "ACTION");
+		rowcnt++;
+	
+		for ( final StudentDTO student: data)
+		{
+			ftMainTable.setText(rowcnt, 0, student.getId().toString());
+			ftMainTable.setText(rowcnt, 1, student.getFirstName());
+			ftMainTable.setText(rowcnt, 2, student.getLastName());
+			ftMainTable.setText(rowcnt, 3, student.getCourse().toString());
+			ftMainTable.setText(rowcnt, 4, student.getGroup().toString());
+			if (student.getDissertation() != null && !student.getDissertation().isEmpty())
+			{
+				ftMainTable.setText(rowcnt, 5, student.getDissertation().get(0).getTitle());
+			}
+			
+			PushButton editBtn = new PushButton("Edit");
+			editBtn.addClickHandler(new ClickHandler() {
+				
+				@Override
+				public void onClick(ClickEvent event) {
+					final PopupPanel editPnl = new PopupPanel(false, true);
+					Command cancelCommand = new Command() {
+						
+						@Override
+						public void execute() {
+							editPnl.hide();
+							loadData();
+						}
+					};
+					editPnl.add(new StudentEdit(student, cancelCommand));
+					editPnl.center();
+				}
+			});
+			ftMainTable.setWidget(rowcnt, 6, editBtn);
+			
+			final DialogBox deleteDialogBox = createDeleteDialogBox(student);
+			PushButton deleteBtn = new PushButton("Delete");
+			deleteBtn.addClickHandler(new ClickHandler() {
+				
+				@Override
+				public void onClick(ClickEvent event) {
+					deleteDialogBox.center();
+					deleteDialogBox.show();
+				}
+			});
+			ftMainTable.setWidget(rowcnt, 7, deleteBtn);
+			
+			rowcnt++;
+		}
+		
+	}
+
+	
+	public void loadData()
+	{
 		University.getUniversityService().getStudentsList(new AsyncCallback<List<StudentDTO>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
+				setData(null);
 				
 			}
 
 			@Override
 			public void onSuccess(List<StudentDTO> result) {
-				int rowcnt = 0;
-				ftList.setText(rowcnt, 0, "ID");
-				ftList.setText(rowcnt, 1, "FIRST NAME");
-				ftList.setText(rowcnt, 2, "SECOND NAME");
-				ftList.setText(rowcnt, 3, "GOURSE");
-				ftList.setText(rowcnt, 4, "GROUP");
-				ftList.setText(rowcnt, 5, "ACTION");
-				rowcnt++;
-			
-				for ( final StudentDTO student: result)
-				{
-					ftList.setText(rowcnt, 0, student.getId().toString());
-					ftList.setText(rowcnt, 1, student.getFirstName());
-					ftList.setText(rowcnt, 2, student.getLastName());
-					ftList.setText(rowcnt, 3, student.getCourse().toString());
-					ftList.setText(rowcnt, 4, student.getGroup().toString());
-					
-					PushButton editBtn = new PushButton("Edit");
-					editBtn.addClickHandler(new ClickHandler() {
-						
-						@Override
-						public void onClick(ClickEvent event) {
-							final PopupPanel editPnl = new PopupPanel(false, true);
-							Command cancelCommand = new Command() {
-								
-								@Override
-								public void execute() {
-									editPnl.hide();
-									
-								}
-							};
-							editPnl.add(new StudentEdit(student, cancelCommand));
-							editPnl.center();
-						}
-					});
-					ftList.setWidget(rowcnt, 5, editBtn);
-					
-					final DialogBox deleteDialogBox = createDeleteDialogBox(student);
-					PushButton deleteBtn = new PushButton("Delete");
-					deleteBtn.addClickHandler(new ClickHandler() {
-						
-						@Override
-						public void onClick(ClickEvent event) {
-							deleteDialogBox.center();
-							deleteDialogBox.show();
-							
-//							StudentDelete studentDelete = new StudentDelete(student);
-//							studentDelete.show();
-						}
-					});
-					ftList.setWidget(rowcnt, 6, deleteBtn);
-					
-					rowcnt++;
-				}
+				setData(result);
 				
 			}
 		});
-		
-		return ftList;
 	}
 	
 	private DialogBox createDeleteDialogBox(final StudentDTO studentDTO)
@@ -164,14 +173,12 @@ public class StudentList extends Composite {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				University.getUniversityService();
-				
+				loadData();
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				// TODO Auto-generated method stub
-				
+				loadData();
 			}
 		});
 	}

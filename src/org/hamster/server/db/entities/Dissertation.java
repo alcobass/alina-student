@@ -5,9 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hamster.shared.dto.AbstractDTO;
+import org.hamster.shared.dto.DissertationDTO;
+
 @Entity
 @Table
-public class Dissertation {
+public class Dissertation implements AbstractEntity{
 	
 	@Id
 	@Column(name="dst_id")
@@ -52,6 +55,13 @@ public class Dissertation {
 
 	public void setTeacherId(Integer teacherId) {
 		this.teacherId = teacherId;
+	}
+
+	@Override
+	public AbstractDTO convertToDTO() {
+		DissertationDTO dissertationDTO = new DissertationDTO();
+		dissertationDTO.setTitle(this.title);
+		return dissertationDTO;
 	}
 	
 }

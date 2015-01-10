@@ -11,6 +11,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 public class StudentDAO {
+	
 	@SuppressWarnings("unchecked")
 	static public List<StudentDTO> getStudentsList(){
 		SessionFactory sf = Utils.getSessionFactory();
@@ -29,7 +30,7 @@ public class StudentDAO {
 		Session session = sf.openSession();
 		Transaction tx = session.beginTransaction();
 		Student student = new Student(studentDTO);
-		session.update(student);
+		session.saveOrUpdate(student);
 		tx.commit();
 	}
 	
